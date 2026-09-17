@@ -1,0 +1,21 @@
+{
+  "name": "ocio-portal",
+  "version": "0.1.0",
+  "private": true,
+  "description": "OCIO Portal - local prototype orchestrator",
+  "scripts": {
+    "dev": "concurrently -n backend,frontend -c blue,green \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && ..\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "seed": "cd backend && ..\\.venv\\Scripts\\python.exe -m app.db.seed",
+    "migrate": "cd backend && ..\\.venv\\Scripts\\python.exe -m alembic upgrade head",
+    "test:backend": ".venv\\Scripts\\python.exe -m pytest backend -q",
+    "test:frontend": "npm --prefix frontend run test",
+    "lint:backend": ".venv\\Scripts\\python.exe -m ruff check backend",
+    "typecheck:frontend": "npm --prefix frontend run typecheck",
+    "build:frontend": "npm --prefix frontend run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
