@@ -181,9 +181,6 @@ export function AppShell() {
           </div>
           {HIDE_DEMO_LABELS ? null : (
             <div className={styles.badgeRow}>
-              <Badge appearance="filled" color="warning" className={styles.badge}>
-                Local Prototype Mode
-              </Badge>
               <Badge appearance="filled" color="danger" className={styles.badge}>
                 Demonstration Data
               </Badge>

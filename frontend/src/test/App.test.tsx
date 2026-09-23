@@ -126,7 +126,7 @@ describe('App shell and navigation', () => {
     renderWithProviders(<App />);
 
     expect(await screen.findByText('OCIO Portal')).toBeInTheDocument();
-    expect(await screen.findByText('Local Prototype Mode')).toBeInTheDocument();
+    expect(await screen.findByText('Demonstration Data')).toBeInTheDocument();
     await waitFor(() => expect(screen.getByText('17')).toBeInTheDocument());
   });
 

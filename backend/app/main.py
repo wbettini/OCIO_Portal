@@ -8,18 +8,22 @@ for this prototype's create-all-on-boot flow.
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.api.router import api_router
 from app.core.config import get_settings
 from app.db.base import Base
 from app.db.engine import engine
 from app.models import entities  # noqa: F401  (registers ORM models on Base.metadata)
+
+STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
 
 
 def _stringify_ctx(errors: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -86,6 +90,16 @@ def create_app() -> FastAPI:
         )
 
     app.include_router(api_router)
+
+    if STATIC_DIR.is_dir():
+        app.mount("/assets", StaticFiles(directory=STATIC_DIR / "assets"), name="assets")
+
+        @app.get("/{full_path:path}", include_in_schema=False)
+        async def spa_fallback(full_path: str) -> FileResponse:
+            candidate = STATIC_DIR / full_path
+            if full_path and candidate.is_file():
+                return FileResponse(candidate)
+            return FileResponse(STATIC_DIR / "index.html")
 
     return app
 
